@@ -24,26 +24,28 @@ var mouseConstraintSecond;
 function create() {
 
   // Set background color for the scene
-  game.stage.backgroundColor = "#2d2d2d";
+  game.stage.backgroundColor = "#2b3d51";
 
   // Enable physics
   game.world.setBounds(0, 0, 300, 500);
   game.physics.startSystem(Phaser.Physics.P2JS);
   game.physics.p2.restitution = 0.8;
-
+  var thirdOfWorld = game.world.width / 3;
 
   // graphics are used for borders
   var graphics = game.add.graphics(0, 0);
-  // draw the borders
-  // left side
-  graphics.lineStyle(8, 0x101010, 1);
-  graphics.lineTo(4, 0);
-  graphics.lineTo(4, 500);
+
+  // Top goal
+  graphics.lineStyle(8, 0xf61b68, 1);
+  graphics.lineTo(thirdOfWorld, 4);
+  graphics.lineTo(thirdOfWorld * 2, 4);
   graphics.endFill();
-  // Right side
-  graphics.lineStyle(8, 0x101010, 1);
-  graphics.lineTo(game.world.width - 4, 0);
-  graphics.lineTo(game.world.width -4, game.world.height);
+
+  // Bottom goal
+  graphics.lineStyle(8, 0xf61b68, 1);
+  graphics.lineTo(thirdOfWorld, game.world.height - 4);
+  graphics.lineTo(thirdOfWorld * 2, game.world.height - 4);
+  graphics.endFill();
   // Remove default padding
   graphics.boundsPadding = 0;
   // empty sprite so graphics can be used with collision
@@ -79,25 +81,24 @@ function create() {
   playerRed.body.fixedRotation = true;
   ball.body.setCircle(12.5);
 
-  var thirdOfWorld = game.world.width / 3;
   // Walls will be extra tchick because of a bug causing the ball to pass through them on high velocity
-  wallLeft.body.setRectangle(48, game.world.height, -18, game.world.height / 2);
+  wallLeft.body.setRectangle(48, game.world.height, -23, game.world.height / 2);
   wallLeft.body.static = true;
-  wallRight.body.setRectangle(48, game.world.height, 18, game.world.height / 2);
+  wallRight.body.setRectangle(48, game.world.height, 23, game.world.height / 2);
   wallRight.body.static = true;
   // top and bottom walls
-  wallTopLeft.body.setRectangle(thirdOfWorld, 48, thirdOfWorld / 2, -18);
+  wallTopLeft.body.setRectangle(thirdOfWorld, 48, thirdOfWorld / 2, -23);
   wallTopLeft.body.static = true;
-  wallTopRight.body.setRectangle(thirdOfWorld, 48, thirdOfWorld * 3 - (thirdOfWorld / 2), -18);
+  wallTopRight.body.setRectangle(thirdOfWorld, 48, thirdOfWorld * 3 - (thirdOfWorld / 2), -23);
   wallTopRight.body.static = true;
-  wallBottomLeft.body.setRectangle(thirdOfWorld, 48, thirdOfWorld / 2, game.world.height + 18);
+  wallBottomLeft.body.setRectangle(thirdOfWorld, 48, thirdOfWorld / 2, game.world.height + 23);
   wallBottomLeft.body.static = true;
-  wallBottomRight.body.setRectangle(thirdOfWorld, 48, thirdOfWorld * 3 - (thirdOfWorld / 2), game.world.height + 18);
+  wallBottomRight.body.setRectangle(thirdOfWorld, 48, thirdOfWorld * 3 - (thirdOfWorld / 2), game.world.height + 23);
   wallBottomRight.body.static = true;
 
-  goalTop.body.setRectangle(thirdOfWorld, 48, thirdOfWorld * 2 - (thirdOfWorld / 2), -18);
+  goalTop.body.setRectangle(thirdOfWorld, 48, thirdOfWorld * 2 - (thirdOfWorld / 2), -23);
   goalTop.body.static = true;
-  goalBottom.body.setRectangle(thirdOfWorld, 48, thirdOfWorld * 2 - (thirdOfWorld / 2), game.world.height + 18);
+  goalBottom.body.setRectangle(thirdOfWorld, 48, thirdOfWorld * 2 - (thirdOfWorld / 2), game.world.height + 23);
   goalBottom.body.static = true;
 
 
@@ -106,7 +107,7 @@ function create() {
   //  Create collision group for the players and ball
   var playerCollisionGroup = game.physics.p2.createCollisionGroup();
   // Create a special collisiongroup for the walls
-  var wallCollisionGroup = game.physics.p2.createCollisionGroup();
+  var ballCollisionGroup = game.physics.p2.createCollisionGroup();
 
   //  This part is vital if you want the objects with their own collision groups to still collide with the world bounds
   //  (which we do) - what this does is adjust the bounds to use its own collision group.
@@ -114,35 +115,26 @@ function create() {
 
   // Add objects to CollisionGroups
   playerGreen.body.setCollisionGroup(playerCollisionGroup);
-  playerGreen.body.collides([playerCollisionGroup]);
-  playerGreen.body.collides([wallCollisionGroup]);
+  playerGreen.body.collides([playerCollisionGroup, ballCollisionGroup]);
 
   playerRed.body.setCollisionGroup(playerCollisionGroup);
-  playerRed.body.collides([playerCollisionGroup]);
-  playerRed.body.collides([wallCollisionGroup]);
+  playerRed.body.collides([playerCollisionGroup, ballCollisionGroup]);
 
-  ball.body.setCollisionGroup(wallCollisionGroup);
-  ball.body.collides([playerCollisionGroup]);
-  ball.body.collides([wallCollisionGroup]);
+  ball.body.setCollisionGroup(ballCollisionGroup);
+  ball.body.collides([playerCollisionGroup, ballCollisionGroup]);
 
-  wallLeft.body.setCollisionGroup(wallCollisionGroup);
-  wallLeft.body.collides([playerCollisionGroup]);
-  wallLeft.body.collides([wallCollisionGroup]);
-  wallRight.body.setCollisionGroup(wallCollisionGroup);
-  wallRight.body.collides([playerCollisionGroup]);
-  wallRight.body.collides([wallCollisionGroup]);
-  wallTopLeft.body.setCollisionGroup(wallCollisionGroup);
-  wallTopLeft.body.collides([playerCollisionGroup]);
-  wallTopLeft.body.collides([wallCollisionGroup]);
-  wallTopRight.body.setCollisionGroup(wallCollisionGroup);
-  wallTopRight.body.collides([playerCollisionGroup]);
-  wallTopRight.body.collides([wallCollisionGroup]);
-  wallBottomLeft.body.setCollisionGroup(wallCollisionGroup);
-  wallBottomLeft.body.collides([playerCollisionGroup]);
-  wallBottomLeft.body.collides([wallCollisionGroup]);
-  wallBottomRight.body.setCollisionGroup(wallCollisionGroup);
-  wallBottomRight.body.collides([playerCollisionGroup]);
-  wallBottomRight.body.collides([wallCollisionGroup]);
+  wallLeft.body.setCollisionGroup(ballCollisionGroup);
+  wallLeft.body.collides([playerCollisionGroup, ballCollisionGroup]);
+  wallRight.body.setCollisionGroup(ballCollisionGroup);
+  wallRight.body.collides([playerCollisionGroup, ballCollisionGroup]);
+  wallTopLeft.body.setCollisionGroup(ballCollisionGroup);
+  wallTopLeft.body.collides([playerCollisionGroup, ballCollisionGroup]);
+  wallTopRight.body.setCollisionGroup(ballCollisionGroup);
+  wallTopRight.body.collides([playerCollisionGroup, ballCollisionGroup]);
+  wallBottomLeft.body.setCollisionGroup(ballCollisionGroup);
+  wallBottomLeft.body.collides([playerCollisionGroup, ballCollisionGroup]);
+  wallBottomRight.body.setCollisionGroup(ballCollisionGroup);
+  wallBottomRight.body.collides([playerCollisionGroup, ballCollisionGroup]);
 
   goalTop.body.setCollisionGroup(playerCollisionGroup);
   goalTop.body.collides([playerCollisionGroup]);
@@ -228,5 +220,31 @@ function render() {
 }
 
 function update() {
+  // Limit the speed of Players and ball
+  constrainVelocity(ball, 100);
+  constrainVelocity(playerGreen, 100);
+  constrainVelocity(playerRed, 100);
+}
+
+function constrainVelocity(sprite, maxVelocity) {
+  var body = sprite.body;
+  var angle, currVelocitySqr, vx, vy;
+
+  vx = body.data.velocity[0];
+  vy = body.data.velocity[1];
+
+  currVelocitySqr = vx * vx + vy * vy;
+
+  if (currVelocitySqr > maxVelocity * maxVelocity) {
+    angle = Math.atan2(vy, vx);
+
+    vx = Math.cos(angle) * maxVelocity;
+    vy = Math.sin(angle) * maxVelocity;
+
+    body.data.velocity[0] = vx;
+    body.data.velocity[1] = vy;
+    console.log('limited speed to: '+maxVelocity);
+  }
+
 
 }
