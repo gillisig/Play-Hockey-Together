@@ -61,7 +61,6 @@ function create() {
   // wallLeft.addChild(graphics);
 
 
-
   // Green player
   playerGreen = game.add.sprite(125, 50, "pong-green");
 
@@ -100,8 +99,6 @@ function create() {
   goalTop.body.static = true;
   goalBottom.body.setRectangle(thirdOfWorld, 48, thirdOfWorld * 2 - (thirdOfWorld / 2), game.world.height + 23);
   goalBottom.body.static = true;
-
-
 
 
   //  Create collision group for the players and ball
