@@ -22,6 +22,7 @@ var mouseConstraintFirst;
 var mouseConstraintSecond;
 
 function create() {
+  
 
   // Set background color for the scene
   game.stage.backgroundColor = "#2b3d51";
