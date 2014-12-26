@@ -1,3 +1,1 @@
-Play Pong Together
-Play Pong Together
-
+Play Hockey Together on the same device
