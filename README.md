@@ -1,1 +1,1 @@
-Play Hockey Together on the same device
+Two player hockey game using the same device. Built with Phaser and currently far from being ready, but still a proof of concept.
